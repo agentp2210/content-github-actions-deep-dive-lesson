@@ -66,7 +66,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
       - name: Upload to S3
-        run: aws s3 cp ${{ github.sha }}.zip s3://test-${{ secret.AWS_ACCOUNT_ID }}/${{ github.sha }}.zip
+        run: aws s3 cp ${{ github.sha }}.zip s3://test-${{ secrets.AWS_ACCOUNT_ID }}/${{ github.sha }}.zip
   
   test:
     runs-on: ubuntu-latest
@@ -81,9 +81,9 @@ jobs:
       - name: Create test function
         run: |
           aws lambda create-function --function-name test-function \
-            --code S3Bucket=test-${{ secret.AWS_ACCOUNT_ID }},S3Key=${{ github.sha }}.zip \
+            --code S3Bucket=test-${{ secrets.AWS_ACCOUNT_ID }},S3Key=${{ github.sha }}.zip \
             --handler lambda_function.lambda_handler --runtime python3.8 \
-            --role arn:aws:iam::${{ secret.AWS_ACCOUNT_ID }}/service-role/my-function-role-24vwiljl
+            --role arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}/service-role/my-function-role-24vwiljl
       - name: Wait 30 seconds
         run: sleep 30
       - name: Destroy test function
